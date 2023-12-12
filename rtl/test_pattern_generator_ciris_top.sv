@@ -56,19 +56,22 @@ module test_pattern_generator_ciris_top #(
 
   ///
 
-  logic                          vip_ctrl_busy ;
-  logic [DATA_WIDTH-1:0]         data_stndrt   ;
-  logic [DATA_WIDTH-1:0]         data_offset   ;
-  logic [DATA_WIDTH-1:0]         data_onecolor ;
-  logic [DATA_WIDTH-1:0]         data_grad     ;
-  logic [DATA_WIDTH-1:0]         data_imag     ;
-  logic                          enable        ;
-  logic                          mode_bw       ;
-  logic [           7:0]         offset_frames ;
-  logic [          23:0]         color_onecolor;
-  logic [  REGS_NUM-1:0][DW-1:0] word_mux      ;
-  logic [  REGS_NUM-1:0]         word_valid_wr ;
-  logic [  REGS_NUM-1:0]         word_valid_rd ;
+  logic                          vip_ctrl_busy    ;
+  logic [DATA_WIDTH-1:0]         data_stndrt      ;
+  logic [DATA_WIDTH-1:0]         data_offset      ;
+  logic [DATA_WIDTH-1:0]         data_onecolor    ;
+  logic [DATA_WIDTH-1:0]         data_grad        ;
+  logic [DATA_WIDTH-1:0]         data_imag        ;
+  logic                          enable           ;
+  logic                          mode_bw          ;
+  logic [           7:0]         offset_frames    ;
+  logic [          23:0]         color_onecolor   ;
+  logic [  REGS_NUM-1:0][DW-1:0] word_mux         ;
+  logic [  REGS_NUM-1:0]         word_valid_wr    ;
+  logic [  REGS_NUM-1:0]         word_valid_rd    ;
+  logic                          handshake_gen_mux;
+  logic                          handshake_mux_gen;
+
 
   ///
 
@@ -103,24 +106,26 @@ av_univ_regs #(
     .MODE         (MODE         ),
     .OFFSET_FRAMES(OFFSET_FRAMES)
   ) uut_mux_test_pattern_generator_ciris (
-    .clk_i           (clk_i         ),
-    .rst_i           (rst_i         ),
-    .word_valid_wr_i (word_valid_wr ),
-    .word_i          (word_mux      ),
-    .word_valid_rd_i (word_valid_rd ),
-    .data_stndrt_i   (data_stndrt   ),
-    .data_offset_i   (data_offset   ),
-    .data_grad_i     (data_grad     ),
-    .data_onecolor_i (data_onecolor ),
-    .data_image_i    (data_imag     ),
-    .data_o          (gen.data      ),
-    .enable_o        (enable        ),
-    .mode_bw_o       (mode_bw       ),
-    .height_o        (gen.height    ),
-    .width_o         (gen.width     ),
-    .offset_frames_o (offset_frames ),
-    .interlaced_o    (gen.interlaced),
-    .color_onecolor_o(color_onecolor)
+    .clk_i           (clk_i            ),
+    .rst_i           (rst_i            ),
+    .word_valid_wr_i (word_valid_wr    ),
+    .word_i          (word_mux         ),
+    .word_valid_rd_i (word_valid_rd    ),
+    .data_stndrt_i   (data_stndrt      ),
+    .data_offset_i   (data_offset      ),
+    .data_grad_i     (data_grad        ),
+    .data_onecolor_i (data_onecolor    ),
+    .data_image_i    (data_imag        ),
+    .data_o          (gen.data         ),
+    .enable_o        (enable           ),
+    .mode_bw_o       (mode_bw          ),
+    .height_o        (gen.height       ),
+    .width_o         (gen.width        ),
+    .offset_frames_o (offset_frames    ),
+    .interlaced_o    (gen.interlaced   ),
+    .color_onecolor_o(color_onecolor   ),
+    .handshake_i     (handshake_gen_mux),
+    .handshake_o     (handshake_mux_gen)
   );
 
   test_pattern_generator_ciris #(.DATA_WIDTH(DATA_WIDTH)) uut_test_pattern_generator_ciris (
@@ -141,7 +146,9 @@ av_univ_regs #(
     .data_grad_o     (data_grad        ),
     .data_onecolor_o (data_onecolor    ),
     .data_imag_o     (data_imag        ),
-    .vip_ctrl_send_o (gen.vip_ctrl_send)
+    .vip_ctrl_send_o (gen.vip_ctrl_send),
+    .handshake_i     (handshake_mux_gen),
+    .handshake_o     (handshake_gen_mux)
   );
 
   alt_vipvfr131_common_control_packet_encoder #(

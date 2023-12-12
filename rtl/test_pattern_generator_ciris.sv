@@ -10,8 +10,10 @@ module test_pattern_generator_ciris #(parameter DATA_WIDTH    = 24) (
   input        [           5:0] interlaced_i    , // развертка
   input        [           7:0] offset_frames_i , // кадр после которого будет сдвиг
   input        [          23:0] color_onecolor_i, // цвет монохрома
+  input                         handshake_i     ,
   ///
   output                        valid_o         ,
+  output logic                  handshake_o     ,
   output logic                  end_of_video_o  ,
   output logic [DATA_WIDTH-1:0] data_stndrt_o   , // стандартные полосы
   output logic [DATA_WIDTH-1:0] data_offset_o   , // полосы со свдигом
@@ -336,8 +338,11 @@ module test_pattern_generator_ciris #(parameter DATA_WIDTH    = 24) (
     end
   end
 
-///
+/// формирование подтвержржения смены режима 
 
+assign handshake_o = (handshake_i) ? end_of_video_o : 1'b0;
+
+///
   assign valid_o = (cnt_stripe == 1) ? ready_i : (cnt_stripe == 0) ? '0 : ready_i ; // установка сигнала для корректной работы с латентонстью
 
 endmodule
