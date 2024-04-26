@@ -72,7 +72,6 @@ module test_pattern_generator_ciris_top #(
   logic                          handshake_gen_mux;
   logic                          handshake_mux_gen;
 
-
   ///
 
 av_univ_regs #(
