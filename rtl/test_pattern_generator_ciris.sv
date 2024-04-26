@@ -40,7 +40,7 @@ module test_pattern_generator_ciris #(parameter DATA_WIDTH    = 24) (
   logic [DATA_WIDTH-1:0] data_reg_grad_color;
   logic [DATA_WIDTH-1:0] data_reg_onecolor  ;
   logic [DATA_WIDTH-1:0] data_reg_image     ;
-//коэффициенты для выбора цвета
+///коэффициенты для выбора цвета
   wire coef_c;
   wire coef_b;
   wire coef_a;
