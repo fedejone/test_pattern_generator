@@ -31,7 +31,7 @@ module mux_test_pattern_generator_ciris #(
   output logic [           5:0]         interlaced_o    ,
   output logic [          23:0]         color_onecolor_o
 );
-
+///
   logic [4:0] reg_mode     ;
   logic [4:0] handshake_reg;
 
